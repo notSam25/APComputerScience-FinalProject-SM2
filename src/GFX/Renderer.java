@@ -36,12 +36,13 @@ public class Renderer extends JFrame {
      */
     public Renderer() {
         this.m_Panel.setDoubleBuffered(false);
-        this.m_Panel.setPreferredSize(new Dimension(600, 600));
+        this.m_Panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
 
         this.setTitle(m_WindowName);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
-        this.setLocation(new Point(75, 200));
+        this.setResizable(true);
+        this.setLocation(new Point(0, 0));
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
         this.setUndecorated(false);
         this.add(this.m_Panel);
         this.pack();
@@ -54,21 +55,32 @@ public class Renderer extends JFrame {
      */
     public void handleGame() {
 
+        int cameraMoveSpeed = 1;
         while (true) {
             KeyboardHandler.update();
             this.repaint(); // Draw to the window
 
+            int movementSpeed = cameraMoveSpeed;
+
+            if (KeyboardHandler.keys[KeyboardHandler.GetKey(' ')].down) {
+                 movementSpeed*=3;
+             }
+
+             if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
+                Camera.toggleBoundary();
+             }
+
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
-                Camera.moveCamera(CameraMovement.UP, 10);
+                Camera.moveCamera(CameraMovement.UP, movementSpeed);
             }
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('a')].down) {
-                Camera.moveCamera(CameraMovement.LEFT, 10);
+                Camera.moveCamera(CameraMovement.LEFT, movementSpeed);
             }
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('s')].down) {
-                Camera.moveCamera(CameraMovement.DOWN, 10);
+                Camera.moveCamera(CameraMovement.DOWN, movementSpeed);
             }
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('d')].down) {
-                Camera.moveCamera(CameraMovement.RIGHT, 10);
+                Camera.moveCamera(CameraMovement.RIGHT, movementSpeed);
             }
 
             try {
@@ -79,6 +91,8 @@ public class Renderer extends JFrame {
         }
     }
 
+
+    private final int windowWidth = 1000, windowHeight = 1000;
     private final Panel m_Panel = new Panel();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }

@@ -4,5 +4,5 @@ public class Map {
     public Map() {
 
     }
-    public int tiles[][] = new int[50][50];
+    public static int tiles[][] = new int[100][100];
 }
