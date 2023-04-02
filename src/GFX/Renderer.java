@@ -2,6 +2,8 @@ package GFX;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,13 +24,14 @@ public class Renderer extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            camera.render(g, curMap);
+            this.setBackground(Color.green);
+
+            curMap.drawMap(g, Camera.getCameraPosition());
 
             g.dispose();
         }
 
         private Map curMap = new Map();
-        private Camera camera = new Camera();
     }
 
     /*
@@ -40,9 +43,9 @@ public class Renderer extends JFrame {
 
         this.setTitle(m_WindowName);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(true);
+        this.setResizable(false);
         this.setLocation(new Point(0, 0));
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(false);
         this.add(this.m_Panel);
         this.pack();
@@ -62,13 +65,13 @@ public class Renderer extends JFrame {
 
             int movementSpeed = cameraMoveSpeed;
 
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey(' ')].down) {
-                 movementSpeed*=3;
-             }
+            if (KeyboardHandler.keys[KeyEvent.VK_SHIFT].down) {
+                movementSpeed *= 3;
+            }
 
-             if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
+            if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
                 Camera.toggleBoundary();
-             }
+            }
 
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
                 Camera.moveCamera(CameraMovement.UP, movementSpeed);
@@ -91,8 +94,15 @@ public class Renderer extends JFrame {
         }
     }
 
+    public static int getWindowWidth() {
+        return windowWidth;
+    }
 
-    private final int windowWidth = 1000, windowHeight = 1000;
-    private final Panel m_Panel = new Panel();
+    public static int getWindowHeight() {
+        return windowHeight;
+    }
+
+    private static final int windowWidth = 800, windowHeight = 600;
+    private static final Panel m_Panel = new Panel();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }
