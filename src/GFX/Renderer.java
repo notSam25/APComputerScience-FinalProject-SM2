@@ -59,16 +59,16 @@ public class Renderer extends JFrame {
             this.repaint(); // Draw to the window
 
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
-                Camera.moveCamera(CameraMovement.UP, 1);
+                Camera.moveCamera(CameraMovement.UP, 10);
             }
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('a')].down) {
-                Camera.moveCamera(CameraMovement.LEFT, 1);
+                Camera.moveCamera(CameraMovement.LEFT, 10);
             }
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('s')].down) {
-                Camera.moveCamera(CameraMovement.DOWN, 1);
+                Camera.moveCamera(CameraMovement.DOWN, 10);
             }
             if (KeyboardHandler.keys[KeyboardHandler.GetKey('d')].down) {
-                Camera.moveCamera(CameraMovement.RIGHT, 1);
+                Camera.moveCamera(CameraMovement.RIGHT, 10);
             }
 
             try {
