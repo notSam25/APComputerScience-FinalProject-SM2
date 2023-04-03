@@ -2,13 +2,11 @@ package GFX;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import GFX.Camera.CameraMovement;
 import Game.Map;
 import Util.KeyboardHandler;
 
@@ -58,32 +56,18 @@ public class Renderer extends JFrame {
      */
     public void handleGame() {
         while (true) {
+            // update values for the keyboard handler
+            KeyboardHandler.update();
 
+            // update the width for the window
             windowWidth = this.getContentPane().getWidth();
             windowHeight = this.getContentPane().getHeight();
-
-            KeyboardHandler.update();
-            this.repaint(); // Draw to the window
-
-            int movementSpeed = 1 * (KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? 3 : 1);
-
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
-                Camera.toggleBoundary();
-            }
             
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
-                Camera.moveCamera(CameraMovement.UP, movementSpeed);
-            }
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('a')].down) {
-                Camera.moveCamera(CameraMovement.LEFT, movementSpeed);
-            }
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('s')].down) {
-                Camera.moveCamera(CameraMovement.DOWN, movementSpeed);
-            }
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('d')].down) {
-                Camera.moveCamera(CameraMovement.RIGHT, movementSpeed);
-            }
+            // handle camera updates
+            Camera.handleCamera();
 
+            // draw to the screen
+            this.repaint();
             try {
                 Thread.sleep(1);
             } catch (InterruptedException | IllegalArgumentException e) {
