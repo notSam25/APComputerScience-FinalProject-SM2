@@ -29,6 +29,8 @@ public class Renderer extends JFrame {
             this.setBackground(backgroundColor);
             curMap.drawMap(g);
 
+            Renderer.getGameHandler().drawEntities(g);
+
             g.setColor(Color.BLACK);
             g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
             g.dispose();
@@ -49,7 +51,7 @@ public class Renderer extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
         this.setLocation(new Point(0, 0));
-        this.setMinimumSize(new Dimension(600, 600));
+        this.setMinimumSize(new Dimension(500, 500));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(false);
         this.add(m_Panel);
@@ -130,9 +132,17 @@ public class Renderer extends JFrame {
         return windowHeight;
     }
 
+    public static GameHandler getGameHandler() {
+        return gameHandler;
+    }
+
+    public static int getWindowHeightPadding() {
+        return windowHeightPadding;
+    }
+
     private static int[] mousePosition;
     private static int windowWidth = 800, windowHeight = 600, windowHeightPadding, idealFPS = 120, framePerSecond = 0;
     private static final Panel m_Panel = new Panel();
-    private final GameHandler gameHandler = new GameHandler();
+    private static final GameHandler gameHandler = new GameHandler();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }

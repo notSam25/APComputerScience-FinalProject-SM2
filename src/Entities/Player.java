@@ -1,13 +1,17 @@
 package Entities;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
 import GFX.Camera;
 import GFX.Renderer;
 import Game.Map;
+import Game.Tile;
 import Util.KeyboardHandler;
 
-public class Player extends Entity {
+public class Player implements Entity {
+
     public Player(int w_x, int w_y) {
         this.worldPosition = new int[] { w_x, w_y };
     }
@@ -65,8 +69,30 @@ public class Player extends Entity {
 
     }
 
-    @Override
+    public int[] getScreenPosition() {
+        return Camera.worldToScreen(worldPosition[0], worldPosition[1]);
+    }
+
+    public int[] getWorldPosition() {
+        return worldPosition;
+    }
+
     public void handleMovement() {
+        this.worldPosition = Camera.screenToWorld(Renderer.getWindowWidth() / 2, Renderer.getWindowHeight() / 2);
+        screenPosition = Camera.worldToScreen(worldPosition[0], worldPosition[1]);
+
         handleCamera();
     }
+
+    public void onRender(Graphics g) {
+        g.setColor(skinColor);
+        g.fillOval(screenPosition[0], screenPosition[1], Tile.tileWidth + (Tile.tileGap * 2), Tile.tileHeight + (Tile.tileGap * 2));
+        System.out.println("ScreenPos: " + screenPosition[0] + " | " + screenPosition[1]);
+        System.out.println("WorldPos: " + worldPosition[0] + " | " + worldPosition  [1]);
+    }
+
+    private static Color skinColor = new Color(252, 200, 117, 255);
+
+    private int[] screenPosition;
+    private int[] worldPosition;
 }

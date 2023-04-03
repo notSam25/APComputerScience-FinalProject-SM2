@@ -1,9 +1,10 @@
 package Entities;
 
-public class Entity {
-    public void handleMovement() {
+import java.awt.Graphics;
 
-    }
+public interface Entity {
+    public void onRender(Graphics g);
+    public void handleMovement();
 
-    protected int worldPosition[] = new int[]{0, 0};
+    int worldPosition[] = new int[]{0, 0};
 }

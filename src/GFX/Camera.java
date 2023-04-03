@@ -20,8 +20,8 @@ public class Camera {
         double scaleX = getScreenScale()[0];
         double scaleY = getScreenScale()[1];
 
-        int worldX = (int) (x / scaleX) + cameraOffset[0];
-        int worldY = (int) (y / scaleY) + cameraOffset[1];
+        int worldX = (int) ((x / scaleX) + cameraOffset[0]);
+        int worldY = (int) ((y / scaleY) + cameraOffset[1]);
         // x / scale + cameraOffset= wx
 
         return new int[] { worldX, worldY };
@@ -60,6 +60,10 @@ public class Camera {
         cameraOffset[1] = value;
     }
 
+    public static int[] getCameraOffset() {
+        return cameraOffset;
+    }
+    
     /*
      * cameraOffset: the world offset for the viewport
      * maxCameraWidth: the maximum width for the camera
