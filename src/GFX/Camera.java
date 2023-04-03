@@ -17,6 +17,17 @@ public class Camera {
         };
     }
 
+    public static int[] screenToWorld(int x, int y) {
+        double scaleX = getScreenScale()[0];
+        double scaleY = getScreenScale()[1];
+
+        int worldX = (int)(x / scaleX) + cameraOffset[0];
+        int worldY = (int)(y / scaleY) + cameraOffset[1];
+        //x / scale + cameraOffset= wx
+
+        return new int[]{worldX, worldY};
+    }
+
     public static int[] worldToScreen(int x, int y) {
         double scaleX = getScreenScale()[0];
         double scaleY = getScreenScale()[1];
@@ -27,11 +38,10 @@ public class Camera {
     }
 
     public static void handleCamera() {
-
         if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
             canMoveOutsideBounds = !canMoveOutsideBounds;
         }
-
+        
         if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
             int moveSpeed = cameraMoveSpeed * (KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? 3 : 1);
             if (canMoveOutsideBounds)

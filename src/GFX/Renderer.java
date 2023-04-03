@@ -2,13 +2,16 @@ package GFX;
 
 import java.awt.Graphics;
 import java.awt.Point;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import Game.Map;
 import Util.KeyboardHandler;
+import Util.MouseHandler;
 
 public class Renderer extends JFrame {
     private static class Panel extends JPanel {
@@ -49,6 +52,7 @@ public class Renderer extends JFrame {
         this.pack();
         this.setVisible(true);
         this.addKeyListener(KeyboardHandler.getListener());
+        this.addMouseListener(MouseHandler.getListener());
     }
 
     /*
@@ -56,13 +60,17 @@ public class Renderer extends JFrame {
      */
     public void handleGame() {
         while (true) {
-            // update values for the keyboard handler
+            // update values for the input handlers
             KeyboardHandler.update();
+            MouseHandler.update();
+            mousePosition = updateMousePosition();
 
             // update the width for the window
             windowWidth = this.getContentPane().getWidth();
             windowHeight = this.getContentPane().getHeight();
-            
+
+            windowHeightPadding = this.getHeight() - windowHeight;
+
             // handle camera updates
             Camera.handleCamera();
 
@@ -76,6 +84,20 @@ public class Renderer extends JFrame {
         }
     }
 
+    private int[] updateMousePosition() {
+        Point mousePos = MouseHandler.getMouseScreenPosition();
+
+        if (mousePos == null)
+            return new int[] { 0, 0 };
+
+        SwingUtilities.convertPointFromScreen(mousePos, this);
+        return new int[] { mousePos.x, mousePos.y };
+    }
+
+    public static int[] getMouseScreenPosition() {
+        return new int[] { mousePosition[0], mousePosition[1] - windowHeightPadding };
+    }
+
     public static int getWindowWidth() {
         return windowWidth;
     }
@@ -84,7 +106,8 @@ public class Renderer extends JFrame {
         return windowHeight;
     }
 
-    private static int windowWidth = 800, windowHeight = 600;
+    private static int[] mousePosition;
+    private static int windowWidth = 800, windowHeight = 600, windowHeightPadding;
     private static final Panel m_Panel = new Panel();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }
