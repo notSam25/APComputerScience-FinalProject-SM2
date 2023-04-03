@@ -43,7 +43,7 @@ public class Map {
      * @param graphics the graphics component
      */
     public void renderTiles(Graphics graphics) {
-        graphics.setColor(Color.black);
+        graphics.setColor(new Color(105,142,65,255));
         Tile tiles[][] = getTiles();
         for (int c = 0; c < tiles.length; c++) {
             for (int r = 0; r < tiles[c].length; r++) {
@@ -52,7 +52,7 @@ public class Map {
 
                 int screenPos[] = Camera.worldToScreen(tileX, tileY);
 
-                graphics.drawRect(screenPos[0], screenPos[1], Tile.tileWidth, Tile.tileHeight);
+                graphics.fillRect(screenPos[0], screenPos[1], Tile.tileWidth, Tile.tileHeight);
             }
         }
     }

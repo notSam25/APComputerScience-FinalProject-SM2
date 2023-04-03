@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import Game.GameHandler;
 import Game.Map;
 import Util.KeyboardHandler;
 import Util.MouseHandler;
@@ -25,14 +26,14 @@ public class Renderer extends JFrame {
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
-            this.setBackground(Color.green);
+            this.setBackground(backgroundColor);
             curMap.drawMap(g);
 
             g.setColor(Color.BLACK);
             g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
             g.dispose();
         }
-
+        private static Color backgroundColor = new Color(99,132,60,255);
         private Map curMap = new Map();
     }
 
@@ -47,6 +48,7 @@ public class Renderer extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
         this.setLocation(new Point(0, 0));
+        this.setMinimumSize(new Dimension(600, 600));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(false);
         this.add(m_Panel);
@@ -60,7 +62,7 @@ public class Renderer extends JFrame {
      * The logic handler for the game.
      */
     public void handleGame() {
-        double interval = (double) 1000000000 / (double) 120.0, nextDrawTime = interval + System.nanoTime(); // TPS in NS
+        double interval = (double) 1000000000 / idealFPS, nextDrawTime = interval + System.nanoTime(); 
         double now = System.nanoTime();
         int FPS = 0;
         while (true) {
@@ -69,14 +71,13 @@ public class Renderer extends JFrame {
             MouseHandler.update();
             mousePosition = updateMousePosition();
 
-            // update the width for the window
+            // update window vars
             windowWidth = this.getContentPane().getWidth();
             windowHeight = this.getContentPane().getHeight();
-
             windowHeightPadding = this.getHeight() - windowHeight;
 
-            // handle camera updates
-            Camera.handleCamera();
+            // update game entities
+            gameHandler.handleGame();
 
             // draw to the screen
             this.repaint();
@@ -90,7 +91,6 @@ public class Renderer extends JFrame {
                     remainder = 0;
 
                 if (System.nanoTime() >= now + 1000000000) {
-                    System.out.println("FPS: " + FPS);
                     framePerSecond = FPS;
                     FPS = 0;
                     now = System.nanoTime();
@@ -127,7 +127,8 @@ public class Renderer extends JFrame {
     }
 
     private static int[] mousePosition;
-    private static int windowWidth = 800, windowHeight = 600, windowHeightPadding, framePerSecond = 0;
+    private static int windowWidth = 800, windowHeight = 600, windowHeightPadding, idealFPS = 120, framePerSecond = 0;
     private static final Panel m_Panel = new Panel();
+    private final GameHandler gameHandler = new GameHandler();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }
