@@ -26,9 +26,10 @@ public class Renderer extends JFrame {
             super.paintComponent(g);
 
             this.setBackground(Color.green);
-
             curMap.drawMap(g);
 
+            g.setColor(Color.BLACK);
+            g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
             g.dispose();
         }
 
@@ -59,6 +60,9 @@ public class Renderer extends JFrame {
      * The logic handler for the game.
      */
     public void handleGame() {
+        double interval = (double) 1000000000 / (double) 120.0, nextDrawTime = interval + System.nanoTime(); // TPS in NS
+        double now = System.nanoTime();
+        int FPS = 0;
         while (true) {
             // update values for the input handlers
             KeyboardHandler.update();
@@ -76,9 +80,25 @@ public class Renderer extends JFrame {
 
             // draw to the screen
             this.repaint();
+
             try {
-                Thread.sleep(1);
-            } catch (InterruptedException | IllegalArgumentException e) {
+                double remainder = nextDrawTime - System.nanoTime();
+                remainder = remainder / 1000000000;
+                FPS++;
+
+                if (remainder < 0)
+                    remainder = 0;
+
+                if (System.nanoTime() >= now + 1000000000) {
+                    System.out.println("FPS: " + FPS);
+                    framePerSecond = FPS;
+                    FPS = 0;
+                    now = System.nanoTime();
+                }
+
+                Thread.sleep((long) remainder);
+                nextDrawTime += interval;
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -107,7 +127,7 @@ public class Renderer extends JFrame {
     }
 
     private static int[] mousePosition;
-    private static int windowWidth = 800, windowHeight = 600, windowHeightPadding;
+    private static int windowWidth = 800, windowHeight = 600, windowHeightPadding, framePerSecond = 0;
     private static final Panel m_Panel = new Panel();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }

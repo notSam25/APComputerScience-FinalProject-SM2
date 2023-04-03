@@ -41,7 +41,7 @@ public class Camera {
         if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
             canMoveOutsideBounds = !canMoveOutsideBounds;
         }
-        
+
         if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
             int moveSpeed = cameraMoveSpeed * (KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? 3 : 1);
             if (canMoveOutsideBounds)
