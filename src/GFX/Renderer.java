@@ -33,7 +33,8 @@ public class Renderer extends JFrame {
             g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
             g.dispose();
         }
-        private static Color backgroundColor = new Color(99,132,60,255);
+
+        private static Color backgroundColor = new Color(99, 132, 60, 255);
         private Map curMap = new Map();
     }
 
@@ -62,7 +63,7 @@ public class Renderer extends JFrame {
      * The logic handler for the game.
      */
     public void handleGame() {
-        double interval = (double) 1000000000 / idealFPS, nextDrawTime = interval + System.nanoTime(); 
+        double interval = (double) 1000000000 / idealFPS, nextDrawTime = interval + System.nanoTime();
         double now = System.nanoTime();
         int FPS = 0;
         while (true) {
@@ -115,7 +116,10 @@ public class Renderer extends JFrame {
     }
 
     public static int[] getMouseScreenPosition() {
-        return new int[] { mousePosition[0], mousePosition[1] - windowHeightPadding };
+        if (mousePosition != null)
+            return new int[] { mousePosition[0], mousePosition[1] - windowHeightPadding };
+        else
+            return new int[] { -1, -1 };
     }
 
     public static int getWindowWidth() {
