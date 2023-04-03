@@ -14,20 +14,29 @@ public class Map {
      * @param graphics the graphics component
      */
     public void drawMap(Graphics graphics) {
-        /* Example box render
-        int mousePosition[] = Renderer.getMouseScreenPosition();
-        int tile[] = Camera.screenToWorld(mousePosition[0], mousePosition[1]);
-        int tileX = (tile[0] / (Tile.tileHeight + Tile.tileGap)) * (Tile.tileHeight + Tile.tileGap);
-        int tileY = (tile[1] / (Tile.tileHeight + Tile.tileGap)) * (Tile.tileHeight + Tile.tileGap);
-        int sol[] = Camera.worldToScreen(tileX, tileY);
-
-        graphics.setColor(Color.red);
-
-        graphics.fillRect(sol[0], sol[1], 50, 50);
-        */
-        
         renderTiles(graphics);
+
+        testPlaceBuilding(graphics);
     }
+
+    private void testPlaceBuilding(Graphics graphics) {
+        int mouseScreenPosition[] = Renderer.getMouseScreenPosition();
+        int mouseWorldPos[] = Camera.screenToWorld(mouseScreenPosition[0], mouseScreenPosition[1]);
+        int tileX = (mouseWorldPos[0] / (Tile.tileHeight + Tile.tileGap)) * (Tile.tileHeight + Tile.tileGap);
+        int tileY = (mouseWorldPos[1] / (Tile.tileHeight + Tile.tileGap)) * (Tile.tileHeight + Tile.tileGap);
+        int tileStartPos[] = Camera.worldToScreen(tileX, tileY);
+
+        int buildingWidth = (Tile.tileHeight + Tile.tileGap) * 2, buildingHeight = buildingWidth;
+        if (tileStartPos[0] >= 0 && tileStartPos[0] + buildingWidth <= Renderer.getWindowWidth()
+                && tileStartPos[1] >= 0
+                && tileStartPos[1] + buildingHeight <= Renderer.getWindowHeight()) {
+
+            graphics.setColor(Color.red);
+            graphics.fillRect(tileStartPos[0], tileStartPos[1], (Tile.tileHeight + Tile.tileGap) * 2,
+                    (Tile.tileHeight + Tile.tileGap) * 2);
+        }
+    }
+
     /**
      * Renders all of the tiles
      * 
