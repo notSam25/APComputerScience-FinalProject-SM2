@@ -2,13 +2,11 @@ package GFX;
 
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import GFX.Camera.CameraMovement;
 import Game.Map;
 import Util.KeyboardHandler;
 
@@ -26,7 +24,7 @@ public class Renderer extends JFrame {
 
             this.setBackground(Color.green);
 
-            curMap.drawMap(g, Camera.getCameraPosition());
+            curMap.drawMap(g);
 
             g.dispose();
         }
@@ -38,16 +36,16 @@ public class Renderer extends JFrame {
      * Starts the window for drawing the game.
      */
     public Renderer() {
-        this.m_Panel.setDoubleBuffered(false);
-        this.m_Panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
+        m_Panel.setDoubleBuffered(false);
+        m_Panel.setPreferredSize(new Dimension(windowWidth, windowHeight));
 
         this.setTitle(m_WindowName);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
+        this.setResizable(true);
         this.setLocation(new Point(0, 0));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(false);
-        this.add(this.m_Panel);
+        this.add(m_Panel);
         this.pack();
         this.setVisible(true);
         this.addKeyListener(KeyboardHandler.getListener());
@@ -57,35 +55,19 @@ public class Renderer extends JFrame {
      * The logic handler for the game.
      */
     public void handleGame() {
-
-        int cameraMoveSpeed = 1;
         while (true) {
+            // update values for the keyboard handler
             KeyboardHandler.update();
-            this.repaint(); // Draw to the window
 
-            int movementSpeed = cameraMoveSpeed;
+            // update the width for the window
+            windowWidth = this.getContentPane().getWidth();
+            windowHeight = this.getContentPane().getHeight();
+            
+            // handle camera updates
+            Camera.handleCamera();
 
-            if (KeyboardHandler.keys[KeyEvent.VK_SHIFT].down) {
-                movementSpeed *= 3;
-            }
-
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('e')].pressed) {
-                Camera.toggleBoundary();
-            }
-
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
-                Camera.moveCamera(CameraMovement.UP, movementSpeed);
-            }
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('a')].down) {
-                Camera.moveCamera(CameraMovement.LEFT, movementSpeed);
-            }
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('s')].down) {
-                Camera.moveCamera(CameraMovement.DOWN, movementSpeed);
-            }
-            if (KeyboardHandler.keys[KeyboardHandler.GetKey('d')].down) {
-                Camera.moveCamera(CameraMovement.RIGHT, movementSpeed);
-            }
-
+            // draw to the screen
+            this.repaint();
             try {
                 Thread.sleep(1);
             } catch (InterruptedException | IllegalArgumentException e) {
@@ -102,7 +84,7 @@ public class Renderer extends JFrame {
         return windowHeight;
     }
 
-    private static final int windowWidth = 800, windowHeight = 600;
+    private static int windowWidth = 800, windowHeight = 600;
     private static final Panel m_Panel = new Panel();
     private static final String m_WindowName = "Final Project | github.com/notSam25/";
 }
