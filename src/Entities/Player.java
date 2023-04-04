@@ -112,22 +112,25 @@ public class Player implements Entity {
 
         int mouse_x = Renderer.getMouseScreenPosition()[0], mouse_y = Renderer.getMouseScreenPosition()[1];
         double circleX = mouse_x - screenPosition[0], circleY = mouse_y - screenPosition[1];
-        
-        circleX /= Math.sqrt((Math.pow(circleX, 2)) + Math.pow(circleY, 2));
-        circleY /= Math.sqrt((Math.pow(circleX, 2)) + Math.pow(circleY, 2));
 
-        circleX *= 15;
-        circleY *= 15;
+        double distance =  Math.sqrt((Math.pow(circleX, 2)) + Math.pow(circleY, 2));
+        circleX /= distance;
+        circleY /= distance;
+
+        circleX *= 50;
+        circleY *= 50;
+
+        System.out.printf("circleX: (%f, %f)\n", circleX, circleY);
 
         g.setColor(Color.red);
-        g.fillOval(screenPosition[0] + (int)circleX, screenPosition[1] + (int)circleY, 20, 20);
+        g.fillOval(screenPosition[0] + (int)circleX - 10, screenPosition[1] + (int)circleY - 10, 20, 20);
 
         g.setColor(Color.black);
-        g.fillOval(screenPosition[0] - Tile.tileGap, screenPosition[1] - Tile.tileGap,
+        g.fillOval(screenPosition[0] - (Tile.tileWidth + (Tile.tileGap * 3)) / 2, screenPosition[1] - (Tile.tileWidth + (Tile.tileGap * 3)) / 2,
                 Tile.tileWidth + (Tile.tileGap * 3), Tile.tileHeight + (Tile.tileGap * 3));
 
         g.setColor(skinColor);
-        g.fillOval(screenPosition[0], screenPosition[1], Tile.tileWidth + Tile.tileGap, Tile.tileHeight + Tile.tileGap);
+        g.fillOval(screenPosition[0] - (Tile.tileWidth + Tile.tileGap) / 2, screenPosition[1] - (Tile.tileWidth + Tile.tileGap) / 2, Tile.tileWidth + Tile.tileGap, Tile.tileHeight + Tile.tileGap);
         // System.out.println("ScreenPos: " + screenPosition[0] + " | " +
         // screenPosition[1]);
         // System.out.println("WorldPos: " + worldPosition[0] + " | " + worldPosition
