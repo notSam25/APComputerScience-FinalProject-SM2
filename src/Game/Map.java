@@ -16,7 +16,7 @@ public class Map {
     public void drawMap(Graphics graphics) {
         renderTiles(graphics);
 
-        testPlaceBuilding(graphics);
+        //testPlaceBuilding(graphics);
     }
 
     private void testPlaceBuilding(Graphics graphics) {
