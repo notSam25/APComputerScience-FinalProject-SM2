@@ -2,6 +2,7 @@ package Entities;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 
 import GFX.Camera;
@@ -83,12 +84,54 @@ public class Player implements Entity {
 
         handleCamera();
     }
+    /* 
+    public Point calculateCircumferencePoint(int theta, int centerX, int centerY, int radius) {
+        double radians = Math.toRadians(theta);
+        int x = centerX + (int) Math.round(Math.cos(radians) * radius);
+        int y = centerY + (int) Math.round(Math.sin(radians) * radius);
+        return new Point(x, y);
+    }*/
+
+    private int theta = 0;
 
     public void onRender(Graphics g) {
+        /*  test
+        theta++;
+        theta = (theta >= 360) ? 0 : theta;
+
+        Point center = calculateCircumferencePoint(theta, screenPosition[0] + (Tile.tileWidth + Tile.tileGap) / 2, screenPosition[1]+ (Tile.tileWidth + Tile.tileGap) / 2, 10);
+        int radius = 10;
+        int diameter = radius * 2;
+        g.setColor(Color.blue);
+        g.fillOval(center.x - radius, center.y - radius,
+                diameter, diameter);
+        g.drawString("Theta: " + theta, 10, Renderer.getWindowHeight() - 30);
+        // test
+
+        */
+
+        int mouse_x = Renderer.getMouseScreenPosition()[0], mouse_y = Renderer.getMouseScreenPosition()[1];
+        double circleX = mouse_x - screenPosition[0], circleY = mouse_y - screenPosition[1];
+        
+        circleX /= Math.sqrt((Math.pow(circleX, 2)) + Math.pow(circleY, 2));
+        circleY /= Math.sqrt((Math.pow(circleX, 2)) + Math.pow(circleY, 2));
+
+        circleX *= 15;
+        circleY *= 15;
+
+        g.setColor(Color.red);
+        g.fillOval(screenPosition[0] + (int)circleX, screenPosition[1] + (int)circleY, 20, 20);
+
+        g.setColor(Color.black);
+        g.fillOval(screenPosition[0] - Tile.tileGap, screenPosition[1] - Tile.tileGap,
+                Tile.tileWidth + (Tile.tileGap * 3), Tile.tileHeight + (Tile.tileGap * 3));
+
         g.setColor(skinColor);
-        g.fillOval(screenPosition[0], screenPosition[1], Tile.tileWidth + (Tile.tileGap * 2), Tile.tileHeight + (Tile.tileGap * 2));
-        System.out.println("ScreenPos: " + screenPosition[0] + " | " + screenPosition[1]);
-        System.out.println("WorldPos: " + worldPosition[0] + " | " + worldPosition  [1]);
+        g.fillOval(screenPosition[0], screenPosition[1], Tile.tileWidth + Tile.tileGap, Tile.tileHeight + Tile.tileGap);
+        // System.out.println("ScreenPos: " + screenPosition[0] + " | " +
+        // screenPosition[1]);
+        // System.out.println("WorldPos: " + worldPosition[0] + " | " + worldPosition
+        // [1]);
     }
 
     private static Color skinColor = new Color(252, 200, 117, 255);
