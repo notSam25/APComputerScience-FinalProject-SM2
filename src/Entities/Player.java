@@ -55,10 +55,10 @@ public class Player implements Entity {
     }
 
     public void handleMovement() {
+        handleCamera();
+
         worldPosition = Camera.screenToWorld(Renderer.getWindowWidth() / 2, Renderer.getWindowHeight() / 2);
         screenPosition = new int[] { Renderer.getWindowWidth() / 2, Renderer.getWindowHeight() / 2 };
-
-        handleCamera();
     }
 
     private void drawPlayerHands(Graphics g, int mouse_x, int mouse_y) {
@@ -133,6 +133,6 @@ public class Player implements Entity {
 
     public static Color skinColor = new Color(252, 200, 117, 255), outlineColor = new Color(51, 51, 51, 255);
 
-    private static int[] screenPosition;
-    private static int[] worldPosition;
+    private static int[] screenPosition = {0, 0};
+    private static int[] worldPosition = {0, 0};
 }

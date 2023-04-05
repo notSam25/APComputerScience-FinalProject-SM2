@@ -6,5 +6,5 @@ public interface Entity {
     public void onRender(Graphics g);
     public void handleMovement();
 
-    int worldPosition[] = new int[]{0, 0};
+    int worldPosition[] = {0, 0};
 }

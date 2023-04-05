@@ -11,7 +11,7 @@ public class LoadScreen {
 
     public static void startMenu(Graphics g) {
         g.setColor(Color.white);
-        g.drawString("Press enter to play", Renderer.getWindowWidth() / 2 - 60, Renderer.getWindowHeight() / 2);
+        g.drawString("Press Enter To Play", Renderer.getWindowWidth() / 2 - 60, Renderer.getWindowHeight() / 2);
 
         if (KeyboardHandler.keys[KeyEvent.VK_ENTER].down)
             isInGame = true;
