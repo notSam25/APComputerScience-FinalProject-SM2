@@ -13,6 +13,9 @@ public class GameHandler {
     }
     
     public void handleGame() {
+        if(!LoadScreen.isInGame())
+            return;
+
         // first index of the entity array will always be the player
         entities.get(0).handleMovement();
 

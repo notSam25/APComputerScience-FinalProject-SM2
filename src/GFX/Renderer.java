@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import Game.GameHandler;
+import Game.LoadScreen;
 import Game.Map;
 import Util.KeyboardHandler;
 import Util.MouseHandler;
@@ -25,21 +26,22 @@ public class Renderer extends JFrame {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             
             this.setBackground(backgroundColor);
             curMap.drawMap(g);
-            
-            Renderer.getGameHandler().drawEntities(g);
-            
-            g.setColor(Color.BLACK);
-            g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
-            
-            
-            
+
+            if (!LoadScreen.isInGame()) {
+                LoadScreen.startMenu(g);
+            } else {
+                Renderer.getGameHandler().drawEntities(g);
+
+                g.setColor(Color.BLACK);
+                g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
+
+            }
+
             g.dispose();
         }
-
 
         private static Color backgroundColor = new Color(99, 132, 60, 255);
         private Map curMap = new Map();

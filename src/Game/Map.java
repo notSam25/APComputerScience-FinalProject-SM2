@@ -15,8 +15,11 @@ public class Map {
      */
     public void drawMap(Graphics graphics) {
         renderTiles(graphics);
-
-        //testPlaceBuilding(graphics);
+        
+        if(!LoadScreen.isInGame())
+            return;
+        
+        testPlaceBuilding(graphics);
     }
 
     private void testPlaceBuilding(Graphics graphics) {

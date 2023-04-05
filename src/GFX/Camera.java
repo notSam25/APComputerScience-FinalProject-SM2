@@ -1,14 +1,6 @@
 package GFX;
 
 public class Camera {
-    public static void toggleBoundary() {
-        canMoveOutsideBounds = !canMoveOutsideBounds;
-    }
-
-    public static boolean boundaryActive() {
-        return canMoveOutsideBounds;
-    }
-
     public static double[] getScreenScale() {
         return new double[] {
                 maxCameraWidth / ((cameraOffset[0] + maxCameraWidth) - cameraOffset[0]),
@@ -68,12 +60,9 @@ public class Camera {
      * cameraOffset: the world offset for the viewport
      * maxCameraWidth: the maximum width for the camera
      * maxCameraHeight: the maximum height for the camera
-     * canMoveOutsideBounds: a boolean dictating wether the camera can escape the
-     * bounds of the map
      * cameraMoveSpeed: the speed which the camera will move per render interval
      */
     private static int cameraOffset[] = { 0, 0 }, maxCameraWidth = Renderer.getWindowWidth(),
             maxCameraHeight = Renderer.getWindowHeight();
-    public static int cameraMoveSpeed = 1;
-    private static boolean canMoveOutsideBounds = false;
+    public static int cameraMoveSpeed = 1, cameraSprintSpeed = 2;
 }
