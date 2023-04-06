@@ -8,16 +8,13 @@ import java.util.ArrayList;
 import GFX.Renderer;
 import Game.Tiles.GoldStash;
 import Game.Tiles.Tile;
+import Game.Tiles.Wall;
 import Util.MouseHandler;
 
 public class BuildMenu implements UI.UIInterface {
     public BuildMenu() {
         addBuilding(new GoldStash(false, 0, 0));
-        addBuilding(new GoldStash(false, 0, 0));
-        addBuilding(new GoldStash(false, 0, 0));
-        addBuilding(new GoldStash(false, 0, 0));
-        addBuilding(new GoldStash(false, 0, 0));
-        addBuilding(new GoldStash(false, 0, 0));
+        addBuilding(new Wall( 0, 0));
     }
 
     private void addBuilding(Tile building) {
@@ -72,6 +69,6 @@ public class BuildMenu implements UI.UIInterface {
     private static ArrayList<Tile> buildings = new ArrayList<Tile>();
     private static ArrayList<Rectangle> buildingSize = new ArrayList<Rectangle>();
     public static Rectangle buildMenuSize = new Rectangle();
-    public static Object pickedTile = null;
+    public static Tile pickedTile = null;
     private int[] startPos = new int[2];
 }

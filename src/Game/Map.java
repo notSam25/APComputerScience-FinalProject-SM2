@@ -9,6 +9,7 @@ import GFX.Camera;
 import GFX.Renderer;
 import Game.Tiles.GoldStash;
 import Game.Tiles.Tile;
+import Game.Tiles.Wall;
 import Game.UI.BuildMenu;
 import Util.MouseHandler;
 
@@ -28,6 +29,17 @@ public class Map {
         testPlaceBuilding(graphics);
     }
 
+    /**
+     * Check if the block coordinate is in bounds
+     * 
+     * @param r
+     * @param c
+     * @return in bounds
+     */
+    public Boolean inBounds(int r, int c) {
+        return r > 0 && r < Map.horizontalTiles && c > 0 && c < Map.verticalTiles;
+    }
+
     private void testPlaceBuilding(Graphics graphics) {
         if (BuildMenu.pickedTile == null)
             return;
@@ -42,13 +54,23 @@ public class Map {
                 && tileStartPos[1] >= 0
                 && tileStartPos[1] + buildingHeight <= Renderer.getWindowHeight()) {
 
+            int highlightX = 0, highlightY = 0;
+            if (BuildMenu.pickedTile.getClass() == GoldStash.class) {
+                highlightY = (Tile.tileHeight + Tile.tileGap) * 2;
+                highlightX = (Tile.tileWidth + Tile.tileGap) * 2;
+            } else if (BuildMenu.pickedTile.getClass() == Wall.class) {
+                highlightY = (Tile.tileHeight + Tile.tileGap);
+                highlightX = (Tile.tileWidth + Tile.tileGap);
+            }
+
+            // handle outline renderer
             graphics.setColor(Color.red);
-            graphics.fillRect(tileStartPos[0], tileStartPos[1], (Tile.tileHeight + Tile.tileGap) * 2,
-                    (Tile.tileHeight + Tile.tileGap) * 2);
+            graphics.fillRect(tileStartPos[0], tileStartPos[1], highlightX, highlightY);
 
             int playerPosX = Renderer.getWindowHeight() / 2,
                     playerPosY = Renderer.getWindowHeight() / 2;
 
+            // handle placing of new tiles
             if (MouseHandler.buttons[MouseHandler.MOUSE_LEFT].pressed
                     // mouse pressed
                     && !(mouseScreenPosition[0] >= BuildMenu.buildMenuSize.x
@@ -57,14 +79,20 @@ public class Map {
                             && mouseScreenPosition[1] <= BuildMenu.buildMenuSize.height)
                     // outside of building ui
                     && !(playerPosX >= tileX && playerPosX <= tileX + (Tile.tileWidth + Tile.tileGap) * 2
-                    && playerPosY >= tileY && playerPosY <= tileY + (Tile.tileHeight + Tile.tileGap) * 2)) {
+                            && playerPosY >= tileY && playerPosY <= tileY + (Tile.tileHeight + Tile.tileGap) * 2)) {
                 // outside bounds of rectangle
                 int iX = tileX / (Tile.tileHeight + Tile.tileGap);
                 int iY = tileY / (Tile.tileWidth + Tile.tileGap);
-                
-                for (int c = 0; c <= 1; c++)
-                    for (int r = 0; r <= 1; r++)
-                        getTiles()[iY + c][iX + r] = new GoldStash((c == 0 && r == 0 ? true : false), tileX, tileY);
+
+                if (BuildMenu.pickedTile.getClass() == GoldStash.class) {
+                    for (int c = 0; c <= 1; c++)
+                        for (int r = 0; r <= 1; r++)
+                            if(inBounds(iX + c, iY + r))
+                                getTiles()[iY + c][iX + r] = new GoldStash((c == 0 && r == 0 ? true : false), tileX, tileY);
+                } else if (BuildMenu.pickedTile.getClass() == Wall.class) {
+                    if(inBounds(iX, iY))
+                        getTiles()[iY][iX] = new Wall(tileX, tileY);
+                }
 
                 BuildMenu.pickedTile = null;
             }
