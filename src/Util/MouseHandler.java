@@ -4,11 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MouseHandler {
-    public enum MouseButton {
-        MOUSE_LEFT,
-        MOUSE_MIDDLE,
-        MOUSE_RIGHT
-    }
+    public static final int MOUSE_LEFT = 0, MOUSE_MIDDLE = 1, MOUSE_RIGHT = 2;
 
     public static final Button[] buttons = new Button[3];
 

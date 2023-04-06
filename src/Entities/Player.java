@@ -9,10 +9,10 @@ import Entities.Tools.Tool.TOOL_RARITY;
 import GFX.Camera;
 import GFX.Renderer;
 import Game.Map;
-import Game.Tile;
+import Game.Tiles.Tile;
 import Util.KeyboardHandler;
 
-public class Player implements Entity {
+public class Player extends Entity {
 
     public Player(int w_x, int w_y) {
         worldPosition = new int[] { w_x, w_y };
@@ -20,28 +20,44 @@ public class Player implements Entity {
 
     public static void handleCamera() {
 
-        if (worldPosition[1] > (Tile.tileHeight + Tile.tileGap) / 2 && KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
-            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed : Camera.cameraMoveSpeed;
-            worldPosition[1] -= moveSpeed;
-            Camera.setCameraY(worldPosition[1] - Renderer.getWindowHeight() / 2);
+        if (worldPosition[1] > (Tile.tileHeight + Tile.tileGap) / 2
+                && KeyboardHandler.keys[KeyboardHandler.GetKey('w')].down) {
+            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed
+                    : Camera.cameraMoveSpeed;
+            if (!isInsideOccupiedTile(worldPosition[0], worldPosition[1] - 1)) {
+                worldPosition[1] -= moveSpeed;
+                Camera.setCameraY(worldPosition[1] - Renderer.getWindowHeight() / 2);
+            }
         }
 
-        if (worldPosition[1] < Map.getMapHeight() - ((Tile.tileHeight + Tile.tileGap) / 2) && KeyboardHandler.keys[KeyboardHandler.GetKey('s')].down) {
-            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed : Camera.cameraMoveSpeed;
-            worldPosition[1] += moveSpeed;
-            Camera.setCameraY(worldPosition[1] - Renderer.getWindowHeight() / 2);
+        if (worldPosition[1] < Map.getMapHeight() - ((Tile.tileHeight + Tile.tileGap) / 2)
+                && KeyboardHandler.keys[KeyboardHandler.GetKey('s')].down) {
+            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed
+                    : Camera.cameraMoveSpeed;
+            if (!isInsideOccupiedTile(worldPosition[0], worldPosition[1] + 1)) {
+                worldPosition[1] += moveSpeed;
+                Camera.setCameraY(worldPosition[1] - Renderer.getWindowHeight() / 2);
+            }
         }
 
-        if (worldPosition[0] > (Tile.tileWidth + Tile.tileGap) / 2 && KeyboardHandler.keys[KeyboardHandler.GetKey('a')].down) {
-            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed : Camera.cameraMoveSpeed;
-            worldPosition[0] -= moveSpeed;
-            Camera.setCameraX(worldPosition[0] - Renderer.getWindowWidth() / 2);
+        if (worldPosition[0] > (Tile.tileWidth + Tile.tileGap) / 2
+                && KeyboardHandler.keys[KeyboardHandler.GetKey('a')].down) {
+            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed
+                    : Camera.cameraMoveSpeed;
+            if (!isInsideOccupiedTile(worldPosition[0] - 1, worldPosition[1])) {
+                worldPosition[0] -= moveSpeed;
+                Camera.setCameraX(worldPosition[0] - Renderer.getWindowWidth() / 2);
+            }
         }
 
-        if (worldPosition[0] < Map.getMapWidth() - ((Tile.tileWidth + Tile.tileGap) / 2) && KeyboardHandler.keys[KeyboardHandler.GetKey('d')].down) {
-            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed : Camera.cameraMoveSpeed;
-            worldPosition[0] += moveSpeed;
-            Camera.setCameraX(worldPosition[0] - Renderer.getWindowWidth() / 2);
+        if (worldPosition[0] < Map.getMapWidth() - ((Tile.tileWidth + Tile.tileGap) / 2)
+                && KeyboardHandler.keys[KeyboardHandler.GetKey('d')].down) {
+            int moveSpeed = KeyboardHandler.keys[KeyEvent.VK_SHIFT].down ? Camera.cameraSprintSpeed
+                    : Camera.cameraMoveSpeed;
+            if (!isInsideOccupiedTile(worldPosition[0] + 1, worldPosition[1])) {
+                worldPosition[0] += moveSpeed;
+                Camera.setCameraX(worldPosition[0] - Renderer.getWindowWidth() / 2);
+            }
         }
 
     }
@@ -72,7 +88,7 @@ public class Player implements Entity {
 
         double theta = Math.atan2(circleY, circleX);
 
-        double distance2 = 20.0;
+        double distance2 = 16.0;
         double offset = (Math.PI / 180) * 45.0;
 
         double leftHandX = distance2 * Math.cos(theta + offset);
@@ -132,7 +148,4 @@ public class Player implements Entity {
     private static int handSize = 10;
 
     public static Color skinColor = new Color(252, 200, 117, 255), outlineColor = new Color(51, 51, 51, 255);
-
-    private static int[] screenPosition = {0, 0};
-    private static int[] worldPosition = {0, 0};
 }

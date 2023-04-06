@@ -3,8 +3,14 @@ package Game;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
+
 import GFX.Camera;
 import GFX.Renderer;
+import Game.Tiles.GoldStash;
+import Game.Tiles.Tile;
+import Game.UI.BuildMenu;
+import Util.MouseHandler;
 
 public class Map {
 
@@ -15,20 +21,22 @@ public class Map {
      */
     public void drawMap(Graphics graphics) {
         renderTiles(graphics);
-        
-        if(!LoadScreen.isInGame())
+
+        if (!LoadScreen.isInGame())
             return;
-        
+
         testPlaceBuilding(graphics);
     }
 
     private void testPlaceBuilding(Graphics graphics) {
+        if (BuildMenu.pickedTile == null)
+            return;
+
         int mouseScreenPosition[] = Renderer.getMouseScreenPosition();
         int mouseWorldPos[] = Camera.screenToWorld(mouseScreenPosition[0], mouseScreenPosition[1]);
         int tileX = (mouseWorldPos[0] / (Tile.tileHeight + Tile.tileGap)) * (Tile.tileHeight + Tile.tileGap);
         int tileY = (mouseWorldPos[1] / (Tile.tileHeight + Tile.tileGap)) * (Tile.tileHeight + Tile.tileGap);
         int tileStartPos[] = Camera.worldToScreen(tileX, tileY);
-
         int buildingWidth = (Tile.tileHeight + Tile.tileGap) * 2, buildingHeight = buildingWidth;
         if (tileStartPos[0] >= 0 && tileStartPos[0] + buildingWidth <= Renderer.getWindowWidth()
                 && tileStartPos[1] >= 0
@@ -37,6 +45,29 @@ public class Map {
             graphics.setColor(Color.red);
             graphics.fillRect(tileStartPos[0], tileStartPos[1], (Tile.tileHeight + Tile.tileGap) * 2,
                     (Tile.tileHeight + Tile.tileGap) * 2);
+
+            int playerPosX = Renderer.getWindowHeight() / 2,
+                    playerPosY = Renderer.getWindowHeight() / 2;
+
+            if (MouseHandler.buttons[MouseHandler.MOUSE_LEFT].pressed
+                    // mouse pressed
+                    && !(mouseScreenPosition[0] >= BuildMenu.buildMenuSize.x
+                            && mouseScreenPosition[0] <= BuildMenu.buildMenuSize.width
+                            && mouseScreenPosition[1] >= BuildMenu.buildMenuSize.y
+                            && mouseScreenPosition[1] <= BuildMenu.buildMenuSize.height)
+                    // outside of building ui
+                    && !(playerPosX >= tileX && playerPosX <= tileX + (Tile.tileWidth + Tile.tileGap) * 2
+                    && playerPosY >= tileY && playerPosY <= tileY + (Tile.tileHeight + Tile.tileGap) * 2)) {
+                // outside bounds of rectangle
+                int iX = tileX / (Tile.tileHeight + Tile.tileGap);
+                int iY = tileY / (Tile.tileWidth + Tile.tileGap);
+                
+                for (int c = 0; c <= 1; c++)
+                    for (int r = 0; r <= 1; r++)
+                        getTiles()[iY + c][iX + r] = new GoldStash((c == 0 && r == 0 ? true : false), tileX, tileY);
+
+                BuildMenu.pickedTile = null;
+            }
         }
     }
 
@@ -46,16 +77,20 @@ public class Map {
      * @param graphics the graphics component
      */
     public void renderTiles(Graphics graphics) {
-        graphics.setColor(new Color(105,142,65,255));
         Tile tiles[][] = getTiles();
         for (int c = 0; c < tiles.length; c++) {
             for (int r = 0; r < tiles[c].length; r++) {
-                int tileX = r * (Tile.tileWidth + Tile.tileGap);
-                int tileY = c * (Tile.tileHeight + Tile.tileGap);
+                Tile curTile = tiles[c][r];
+                if (curTile == null) {
+                    graphics.setColor(new Color(105, 142, 65, 255));
+                    int tileX = r * (Tile.tileWidth + Tile.tileGap);
+                    int tileY = c * (Tile.tileHeight + Tile.tileGap);
 
-                int screenPos[] = Camera.worldToScreen(tileX, tileY);
+                    int screenPos[] = Camera.worldToScreen(tileX, tileY);
 
-                graphics.fillRect(screenPos[0], screenPos[1], Tile.tileWidth, Tile.tileHeight);
+                    graphics.fillRect(screenPos[0], screenPos[1], Tile.tileWidth, Tile.tileHeight);
+                } else
+                    curTile.drawTile(graphics);
             }
         }
     }

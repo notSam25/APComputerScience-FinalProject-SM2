@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import Game.GameHandler;
 import Game.LoadScreen;
 import Game.Map;
+import Game.UI.UI;
 import Util.KeyboardHandler;
 import Util.MouseHandler;
 
@@ -33,11 +34,14 @@ public class Renderer extends JFrame {
             if (!LoadScreen.isInGame()) {
                 LoadScreen.startMenu(g);
             } else {
+                
                 Renderer.getGameHandler().drawEntities(g);
 
+                Renderer.getUserInterface().handlerRender(g);
+                
                 g.setColor(Color.BLACK);
                 g.drawString("FPS: " + Renderer.framePerSecond, 10, Renderer.getWindowHeight() - 10);
-
+                
             }
 
             g.dispose();
@@ -59,7 +63,6 @@ public class Renderer extends JFrame {
         this.setResizable(true);
         this.setLocation(new Point(0, 0));
         this.setMinimumSize(new Dimension(500, 500));
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setUndecorated(false);
         this.add(m_Panel);
         this.pack();
@@ -88,6 +91,9 @@ public class Renderer extends JFrame {
 
             // update game entities
             gameHandler.handleGame();
+
+            // update game UIs
+            userInterface.handleUpdate();
 
             // draw to the screen
             this.repaint();
@@ -147,6 +153,11 @@ public class Renderer extends JFrame {
         return windowHeightPadding;
     }
 
+    public static UI getUserInterface() {
+        return userInterface;
+    }
+
+    private static final UI userInterface = new UI();
     private static int[] mousePosition;
     private static int windowWidth = 800, windowHeight = 600, windowHeightPadding, idealFPS = 120, framePerSecond = 0;
     private static final Panel m_Panel = new Panel();
